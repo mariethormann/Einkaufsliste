@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Meine Einkaufsliste</title>
+	<script src="lib/js/vue.js"></script>
+    <link href="css/gestaltung-to-do.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="einkaufsApp">
+    
+    <h1>Einkaufen</h1>
+    
+    <p>
+    <label for="neueArtikel">Weitere Artikel</label>
+    <input id="neueArtikel" type="text" v-model="neueArtikel">
+    <button class="hinzu" @click="artikelHinzu">hinzufügen</button>
+    </p>
+    
+    <h1>Alle Artikel</h1>
+    
+    <ul>
+        <li v-for="(artikel, index) in artikelliste" :class="{'abgeschlossen': artikel.fertig}"><p>{{artikel.beschreibung}}</p>
+            <button class="erledigtWechseln" @click="erledigtWechseln(index)">&#10003;</button>
+            <button class="loeschen" @click="loeschen(index)">x</button>
+        </li>
+    </ul>
+    
+    <h2>Fehlt noch</h2>
+    
+    <ul>
+        <li v-for="artikel in nichterledigt">{{artikel.beschreibung}}</li>
+    </ul>
+    
+    <h2>Im Wagen</h2>
+    
+    <ul>
+        <li v-for="artikel in erledigt">{{artikel.beschreibung}}</li>
+    </ul>
+    
+    </div>
+    
+    <script>
+	var app = new Vue({
+		el: '#einkaufsApp',
+		data : {
+			artikelliste: [
+                {beschreibung: "Äpfel", fertig: true},
+                {beschreibung: "Butter", fertig: false},
+                {beschreibung: "Gurken", fertig: false},
+                {beschreibung: "Brot", fertig: false},
+                {beschreibung: "Nudeln", fertig: false},
+                {beschreibung: "Wasser", fertig: false},
+            ],
+            neueArtikel: ''
+        },
+        computed:{
+            erledigt(){
+                return this.artikelliste.filter(artikel => artikel.fertig);
+            },
+            nichterledigt(){
+                return this.artikelliste.filter(artikel => !artikel.fertig);
+            },
+        },
+        methods: {
+            artikelHinzu(){
+                this.artikelliste.push({beschreibung: this.neueArtikel,fertig: false});
+                this.neueArtikel = '';
+            },
+            loeschen(index){
+                this.artikelliste.splice(index,1);
+            },
+            erledigtWechseln(index){
+                this.artikelliste[index].fertig=!this.artikelliste[index].fertig;
+            }
+        }
+	});
+</script>
+    
+    </body>
+</html>
+    
+    
